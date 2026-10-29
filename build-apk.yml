@@ -1,0 +1,44 @@
+name: Build Android APK
+
+on:
+  workflow_dispatch:
+    inputs:
+      start_url:
+        description: "Page the app opens (leave as is unless your game lives somewhere else)"
+        required: false
+        default: "https://rhythmhel.imfone.dev/play.html"
+  push:
+    branches: [main, master]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - uses: android-actions/setup-android@v3
+
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: "8.9"
+
+      - name: Build the APK
+        run: >
+          gradle assembleRelease --no-daemon --stacktrace
+          -PSTART_URL="${{ inputs.start_url || 'https://rhythmhel.imfone.dev/play.html' }}"
+          -PVERSION_CODE=${{ github.run_number }}
+          -PVERSION_NAME=1.0.${{ github.run_number }}
+
+      - name: Name the file
+        run: cp app/build/outputs/apk/release/app-release.apk Rhythmhel-1.0.${{ github.run_number }}.apk
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Rhythmhel-apk
+          path: Rhythmhel-1.0.${{ github.run_number }}.apk
+          if-no-files-found: error
