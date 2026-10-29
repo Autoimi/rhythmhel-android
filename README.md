@@ -1,7 +1,7 @@
 # Rhythmhel for Android
 
 A full-screen, landscape Android app that opens the Rhythmhel game. It is a thin shell around your web game
-(`https://rhythmhel.imfone.dev/play.html` by default), so **the game updates itself: you only rebuild the app
+(`https://rhythmhel.app/play.html` by default), so **the game updates itself: you only rebuild the app
 when you want to change the app, not when you update the game.**
 
 What the app adds over just using the browser:
